@@ -1,1 +1,6 @@
-{}
+{
+  "files.autoSave": "off",
+  "[html]": {
+    "editor.formatOnSave": false
+  }
+}

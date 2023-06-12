@@ -1,0 +1,33 @@
+{
+  "name": "chat-application",
+  "version": "1.0.0",
+  "description": "My first full stack application ",
+  "main": "app.js",
+  "scripts": {
+    "start": "NODE_ENV=development nodemon app.js",
+    "prod": "NODE_ENV=production node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mahbub96/chat-application.git"
+  },
+  "author": "Mahbub96",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mahbub96/chat-application/issues"
+  },
+  "homepage": "https://github.com/Mahbub96/chat-application#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.1.4",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.4",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.22"
+  }
+}

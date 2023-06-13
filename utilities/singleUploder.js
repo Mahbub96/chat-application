@@ -1,4 +1,4 @@
-const createHttpError = require("http-errors");
+const createError = require("http-errors");
 const multer = require("multer");
 const path = require("path");
 
@@ -35,7 +35,7 @@ function uploader(subfolder_path, allow_file_types, max_file_size, error_msg) {
       if (allow_file_types.includes(file.mimetype)) {
         cb(null, true);
       } else {
-        cb(createHttpError(error_msg));
+        cb(createError(error_msg));
       }
     },
   });

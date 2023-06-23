@@ -19,7 +19,7 @@ async function login(req, res, next) {
       $or: [{ email: req.body.username }, { mobile: req.body.username }],
     });
 
-    if (user && user.id) {
+    if (user && user._id) {
       const isValidPassword = await bcrypt.compare(
         req.body.password,
         user.password
@@ -44,9 +44,9 @@ async function login(req, res, next) {
           httpOnly: true,
           signed: true,
         });
-
         // set logged in local identifier
         res.locals.loggedInUser = userObj;
+
         res.render("inbox");
       } else {
         throw createError("Login failed! please try again");
@@ -68,7 +68,14 @@ async function login(req, res, next) {
   }
 }
 
+// do logout
+function logout(req, res) {
+  res.clearCookie(process.env.COOKIE_NAME);
+  res.send("logged out");
+}
+
 module.exports = {
   getLogin,
   login,
+  logout,
 };

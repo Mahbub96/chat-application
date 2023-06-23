@@ -1,14 +1,13 @@
 const jwt = require("jsonwebtoken");
 
 const checkLogin = (req, res, next) => {
-  console.log("check login");
   let cookies =
     Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
 
   if (cookies) {
     try {
       const token = cookies[process.env.COOKIE_NAME];
-      console.log(11);
+
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
 
@@ -41,4 +40,15 @@ const checkLogin = (req, res, next) => {
   }
 };
 
-module.exports = checkLogin;
+const redirectLoggedIn = function (req, res, next) {
+  let cookies =
+    Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
+
+  if (!cookies) {
+    next();
+  } else {
+    res.redirect("/inbox");
+  }
+};
+
+module.exports = { checkLogin, redirectLoggedIn };

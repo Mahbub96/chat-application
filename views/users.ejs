@@ -18,7 +18,6 @@
             </tr>
           </thead>
           <tbody id="users-table">
-            <!-- rest of the code on app files at bottom   -->
             <% users.forEach(function(user) { %>
               <tr id="<%= user._id %>">
                 <td class="name">
@@ -35,9 +34,8 @@
                 </td>
               </tr>
             <% }); %>
-
           </tbody>
-        </table> 
+        </table>
       </div>
     </div>
     <%- include('./partials/add-user-modal.ejs'); %>

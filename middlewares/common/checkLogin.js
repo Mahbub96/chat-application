@@ -43,6 +43,7 @@ const checkLogin = (req, res, next) => {
 const redirectLoggedIn = function (req, res, next) {
   let cookies =
     Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
+  console.log(cookies);
 
   if (!cookies) {
     next();

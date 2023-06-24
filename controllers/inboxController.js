@@ -1,5 +1,7 @@
 // external imports
 const createError = require("http-errors");
+const jwt = require("jsonwebtoken");
+
 // internal imports
 const User = require("../models/People");
 const Conversation = require("../models/Conversation");
@@ -14,7 +16,7 @@ async function getInbox(req, res, next) {
         { "creator.id": req.user.userid },
         { "participant.id": req.user.userid },
       ],
-    });
+    }).sort("-createdAt");
     res.locals.data = conversations;
     res.render("inbox");
   } catch (err) {
@@ -33,6 +35,11 @@ async function searchUser(req, res, next) {
 
   try {
     if (searchQuery !== "") {
+      let cookies =
+        Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
+      const token = cookies[process.env.COOKIE_NAME];
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const users = await User.find(
         {
           $or: [
@@ -46,6 +53,7 @@ async function searchUser(req, res, next) {
               email: email_search_regex,
             },
           ],
+          _id: { $ne: decoded.userid },
         },
         "name avatar"
       );
@@ -68,23 +76,33 @@ async function searchUser(req, res, next) {
 // add conversation
 async function addConversation(req, res, next) {
   try {
-    const newConversation = new Conversation({
-      creator: {
-        id: req.user.userid,
-        name: req.user.username,
-        avatar: req.user.avatar || null,
-      },
-      participant: {
-        name: req.body.participant,
-        id: req.body.id,
-        avatar: req.body.avatar || null,
-      },
+    const isFound = await Conversation.findOne({
+      $and: [
+        { "creator.id": req.user.userid },
+        { "participant.id": req.body.id },
+      ],
     });
+    if (!isFound) {
+      const newConversation = new Conversation({
+        creator: {
+          id: req.user.userid,
+          name: req.user.username,
+          avatar: req.user.avatar || null,
+        },
+        participant: {
+          name: req.body.participant,
+          id: req.body.id,
+          avatar: req.body.avatar || null,
+        },
+      });
 
-    const result = await newConversation.save();
-    res.status(200).json({
-      message: "Conversation was added successfully!",
-    });
+      const result = await newConversation.save();
+      res.status(200).json({
+        message: "Conversation was added successfully!",
+      });
+    } else {
+      res.send("Conversation is aready created");
+    }
   } catch (err) {
     res.status(500).json({
       errors: {

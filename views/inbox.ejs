@@ -11,7 +11,7 @@
               <% if (conversation.participant.avatar) { %>
               <img src="./uploads/avatars/<%= conversation.participant.avatar %>" alt="<%= conversation.participant.name %>" />
               <% } else { %>
-                <img src="./images/nophoto.png" />
+                <img src="./images/nophoto.png"/>
               <% } %>
               <div class="title-text"><%= conversation.participant.name %></div>
               <div class="conversation-date"><%= moment(conversation.last_updated).fromNow() %></div>

@@ -16,7 +16,7 @@ async function getInbox(req, res, next) {
         { "creator.id": req.user.userid },
         { "participant.id": req.user.userid },
       ],
-    }).sort("-createdAt");
+    }).sort("-last_updated");
     res.locals.data = conversations;
     res.render("inbox");
   } catch (err) {
@@ -59,6 +59,45 @@ async function searchUser(req, res, next) {
       );
 
       res.json(users);
+    } else {
+      throw createError("You must provide some text to search!");
+    }
+  } catch (err) {
+    res.status(500).json({
+      errors: {
+        common: {
+          msg: err.message,
+        },
+      },
+    });
+  }
+}
+
+// search conversation
+async function searchConversation(req, res, next) {
+  const name_search_regex = new RegExp(escape(req.body.user), "i");
+  // const mobile_search_regex = new RegExp("^" + escape("+88" + searchQuery));
+  // const email_search_regex = new RegExp("^" + escape(searchQuery) + "$", "i");
+  console.log(name_search_regex);
+  try {
+    if (req.body.user !== "") {
+      // let cookies =
+      //   Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
+      // const token = cookies[process.env.COOKIE_NAME];
+
+      // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const users = await Conversation.find(
+        {
+          $or: [
+            { "creator.name": name_search_regex },
+            { "participant.name": name_search_regex },
+          ],
+        },
+        "name avatar"
+      );
+
+      res.json(users);
+      console.log(users);
     } else {
       throw createError("You must provide some text to search!");
     }
@@ -177,6 +216,14 @@ async function sendMessage(req, res, next) {
 
       const result = await newMessage.save();
 
+      // update list time so that last sms sender will be at first position
+      const results = await Conversation.updateOne(
+        {
+          _id: req.body.conversationId,
+        },
+        { $set: { last_updated: result.date_time } }
+      );
+
       // emit socket event
       global.io.emit("new_message", {
         message: {
@@ -217,6 +264,7 @@ async function sendMessage(req, res, next) {
 module.exports = {
   getInbox,
   searchUser,
+  searchConversation,
   addConversation,
   getMessages,
   sendMessage,

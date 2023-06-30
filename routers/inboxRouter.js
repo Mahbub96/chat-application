@@ -5,6 +5,7 @@ const express = require("express");
 const {
   getInbox,
   searchUser,
+  searchConversation,
   addConversation,
   getMessages,
   sendMessage,
@@ -20,6 +21,9 @@ router.get("/", decorateHtmlResponse("Inbox"), checkLogin, getInbox);
 
 // search user
 router.post("/search", checkLogin, searchUser);
+
+// search conversation
+router.post("/searchConversation", checkLogin, searchConversation);
 
 // add Conversation
 router.post("/conversation", checkLogin, addConversation);

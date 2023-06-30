@@ -1,7 +1,9 @@
 <%- include('./partials/header.ejs'); %>
     <div id="chat-container">
       <div id="search-container">
-        <input type="text" placeholder="Search" />
+        <form>
+          <input type="text" placeholder="Search" id="searchConversation"/>
+        </form>
       </div>
       <div id="conversation-list">
         <% data.forEach(function(conversation) { %>
@@ -65,12 +67,15 @@
     <script>
 
       const form = document.querySelector('#chat-form');
+      const searchConversation = document.querySelector('input#searchConversation');
       const messageContainer = document.querySelector('#chat-message-list');
       const chatTitleContainer = document.querySelector('#conversation-partner');
       const loggedinUserId = '<%= loggedInUser.userid %>';
       const loggedinUserName = '<%= loggedInUser.username %>';
       let participant = null; // selected conversation participant object
       let current_conversation_id; // selected conversation id
+      let typingTimers;
+      const doneTypingTimers = 500;
 
       // socket initialization
       const socket = io('<%= process.env.APP_URL %>');
@@ -117,6 +122,45 @@
           document.querySelector('#chat-message-list > .message-row:first-child').insertAdjacentHTML('beforeBegin', messageHTML);
         }
       });
+
+      // show conversation list
+      searchConversation.addEventListener('keyup',()=>{
+        clearTimeout(typingTimers);
+
+        // reset 
+        if(searchConversation.value){
+          typingTimers = setTimeout(searchConversations,doneTypingTimers);
+        }
+      });
+      //on keydown, clear the countdown
+      searchConversation.addEventListener("keydown",  ()=> {
+        clearTimeout(typingTimers);
+      });
+
+      // send request for searchConversation
+      async function searchConversations(){
+        let response = await fetch('/inbox/searchConversation',{
+          method: "POST",
+          body: JSON.stringify({
+            user: searchConversation.value,
+          }),
+          headers:{
+            "content-type":"application/json; charset=UTF-8",
+          },
+        });
+
+        // get response 
+        let result = await response.json();
+
+        // handle error and response 
+        if(result.errors){
+          console.log(errors);
+        }else{
+          if(result.length > 0){
+            console.log(result); 
+          }
+        }
+      }
 
       // get messages of a conversation
       async function getMessages(conversation_id, current_conversation_name){

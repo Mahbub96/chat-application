@@ -14,7 +14,7 @@
           autocomplete="off"
         />
         <p class="error"></p>
-        <div class="search_users"></div>
+        <div id="search_users"></div>
         <input type="submit" value="Submit" class="hide" />
       </form>
     </div>
@@ -27,7 +27,7 @@
   const doneTypingInterval = 500;
   const input = document.querySelector("input#user");
   const conversation_list = document.querySelector("#conversation-list");
-  let users_placeholder = document.querySelector(".search_users");
+  let users_placeholder = document.getElementById("search_users");
 
   // conversation created failure toast
   const conversationFailureToast = Toastify({
@@ -76,6 +76,8 @@
     // get response
     let result = await response.json();
 
+    console.log(result);
+
     // handle error and response
     if (result.errors) {
       const errorplaceholder = document.querySelector("p.error");
@@ -99,8 +101,9 @@
             </li>`;
         });
         generatedHtml += "</ul>";
-        users_placeholder.innerHTML = generatedHtml;
         users_placeholder.style.display = "block";
+        // users_placeholder.style.zIndex = "1000";
+        users_placeholder.innerHTML = generatedHtml;
       }
     }
   }
@@ -119,6 +122,8 @@
           "Content-type": "application/json; charset=UTF-8",
         },
       });
+
+      console.log(response);
 
       const result = response.json();
 

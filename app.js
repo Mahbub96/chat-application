@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const moment = require("moment");
+const cors = require("cors");
 
 // internal imports
 const loginRouter = require("./routers/loginRouter");
@@ -21,6 +22,12 @@ const {
 const app = express();
 const server = http.createServer(app);
 dotenv.config();
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // socket creation
 const io = require("socket.io")(server);

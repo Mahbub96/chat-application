@@ -86,18 +86,16 @@ async function searchConversation(req, res, next) {
       // const token = cookies[process.env.COOKIE_NAME];
 
       // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const users = await Conversation.find(
-        {
-          $or: [
-            { "creator.name": name_search_regex },
-            { "participant.name": name_search_regex },
-          ],
-        },
-        "name avatar"
-      );
+      const user = await User.find({ name: name_search_regex });
+      const conversations = await Conversation.find({
+        $or: [
+          { "creator.name": name_search_regex },
+          { "participant.name": name_search_regex },
+        ],
+      });
 
-      res.json(users);
-      console.log(users);
+      res.json({ user, conversations });
+      console.log();
     } else {
       throw createError("You must provide some text to search!");
     }

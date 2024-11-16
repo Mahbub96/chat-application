@@ -1,0 +1,57 @@
+<%- include('./partials/header.ejs'); %>
+    <div id="login-container">
+      <div id="left-column"></div>
+      <div id="branding">
+        <img src="./images/logo.png" />
+        <h1>Signup - Chat Application</h1>
+      </div>
+      <div id="login-form">
+        <form method="post" action="/signup">
+          <input
+            type="text" 
+            name="name"
+            placeholder="enter name"
+            required
+            value="<%= data && data.name ? data.name : '' %>"
+          />
+          <% if (errors && errors.name) { %>
+            <p class="error show"><%= errors?.name?.msg %></p>
+          <% } %>
+
+          <input
+            type="text"
+            name="email"
+            placeholder="enter email"
+            required
+            value="<%= data && data.email ? data.email : '' %>"
+          />
+          <% if (errors && errors.email) { %>
+            <p class="error show"><%= errors?.email?.msg %></p>
+          <% } %>
+
+          <input
+            type="text"
+            name="mobile"
+            placeholder="enter mobile"
+            required
+            value="<%= data && data.mobile ? data.mobile : '' %>"
+          />
+          <% if (errors && errors.mobile) { %>
+            <p class="error show"><%= errors?.mobile?.msg %></p>
+          <% } %>
+
+          <input type="password" name="password" placeholder="enter password" required />
+          <% if (errors && errors?.password) { %>
+            <p class="error show"><%= errors?.password?.msg %></p>
+          <% } %>
+
+          <% if (errors && errors.common) { %>
+            <p class="error show"><%= errors?.common?.msg %></p>
+          <% } %>
+
+          <input type="submit" value="Sign Up" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

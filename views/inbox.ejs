@@ -3,6 +3,9 @@
       <div id="search-container">
         <form>
           <input type="text" placeholder="Search" id="searchConversation"/>
+          <p class="error"></p>
+          <div class="search_users"></div>
+          <input type="submit" value="Submit" class="hide" />
         </form>
       </div>
       <div id="conversation-list">
@@ -67,6 +70,8 @@
     <script>
 
       const form = document.querySelector('#chat-form');
+      const search_user_palcehotders = document.querySelector(".search_users");
+      const errorplaceholder = document.querySelector(".error");
       const searchConversation = document.querySelector('input#searchConversation');
       const messageContainer = document.querySelector('#chat-message-list');
       const chatTitleContainer = document.querySelector('#conversation-partner');
@@ -149,18 +154,39 @@
           },
         });
 
-        // get response 
-        let result = await response.json();
+        // get response
+    let {user,conversations} = await response.json();
+    console.log(154,user);
+    console.log(155,conversations);
 
-        // handle error and response 
-        if(result.errors){
-          console.log(errors);
-        }else{
-          if(result.length > 0){
-            console.log(result); 
-          }
-        }
+    // handle error and response
+    if (user.errors) {
+      const errorplaceholder = document.querySelector("p.error");
+      errorplaceholder.textContent = user.errors.common.msg;
+      errorplaceholder.style.display = "block";
+    } else {
+      if (user.length > 0) {
+        let generatedHtml = "<ul>";
+        user.forEach((user) => {
+          const avatar = user.avatar
+            ? "./uploads/avatars/" + user.avatar
+            : "./images/nophoto.png";
+
+          generatedHtml += `<li onclick="getMessages('${conversations._id}', '${user.name}')">
+              <div class="user">
+                <div class="avatar">
+                  <img src="${avatar}" />
+                </div>
+                <div class="username">${user.name}</div>
+              </div>
+            </li>`;
+        });
+        generatedHtml += "</ul>";
+        search_user_palcehotders.innerHTML = generatedHtml;
+        search_user_palcehotders.style.display = "block";
       }
+    }
+  }
 
       // get messages of a conversation
       async function getMessages(conversation_id, current_conversation_name){

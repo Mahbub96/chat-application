@@ -175,7 +175,7 @@ input[type="submit"]:active {
   color: #fff;
 }
 
-.search_users {
+#search_users {
   display: none;
   background: var(--secondary);
   outline: none;
@@ -190,11 +190,11 @@ input[type="submit"]:active {
   height: auto;
 }
 
-.search_users ul {
+#search_users ul {
   list-style-type: none;
 }
 
-.search_users ul > li {
+#search_users ul > li {
   background: var(--primary);
   padding: 7px;
   border: 1px solid var(--dark);
@@ -203,13 +203,13 @@ input[type="submit"]:active {
   height: auto;
 }
 
-.search_users .user {
+#search_users .user {
   display: grid;
   grid-template-columns: 30px 1fr;
   align-items: center;
 }
 
-.search_users .avatar img {
+#search_users .avatar img {
   width: 24px;
   height: 24px;
 }
@@ -535,6 +535,32 @@ input[type="submit"]:active {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.signup-link p {
+  color: var(--light);
+}
+
+.signup-button {
+  color: var(--primary);
+  text-decoration: none;
+  background: linear-gradient(to right, var(--green), var(--blue));
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: var(--light);
+  transition: all 0.3s ease;
+}
+
+.signup-button:hover {
+  background-color: var(--primary);
+  color: var(--light);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* inbox related responsive styles */
